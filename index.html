@@ -16,19 +16,25 @@
     <div class="row text-center mt-2">
         <div class="col-6">
             <img src="assets/player1.png" alt="Jogador 1" :class="playerActived == 1 ? 'active' : ''">
-            <p>Jogador 1</p>
+            <p>
+                Jogador 1
+                <span class="badge badge-default">{{ playerOne.historic.length }}</span>
+            </p>
             <p><strong>Pontos:</strong> {{ playerOne.points }}</p>
         </div>
         <div class="col-6">
             <img src="assets/player2.png" alt="Jogador 2" :class="playerActived == 2 ? 'active' : ''">
-            <p>Jogador 2</p>
+            <p>
+                Jogador 2
+                <span class="badge badge-default">{{ playerTwo.historic.length }}</span>
+            </p>
             <p><strong>Pontos:</strong> {{ playerTwo.points }}</p>
         </div>
 
         <div class="controls col">
             <a href="#" @click.prevent="changePlayer" class="btn btn-success btn-sm">Pular</a>
-            <a href="" class="btn btn-danger btn-sm">Finalizar Jogo</a>
-            <a href="" class="btn btn-info btn-sm">Resetar</a>
+            <a href="#" @click.prevent="finishGame" class="btn btn-danger btn-sm">Finalizar Jogo</a>
+            <a href="#" @click.prevent="resetGame" class="btn btn-info btn-sm">Resetar</a>
         </div>
     </div>
     <hr>
@@ -53,27 +59,69 @@
         data: {
             playerActived: 1,
             playerOne: {
-                points: 0
+                points: 0,
+                historic: []
             },
             playerTwo: {
-                points: 0
+                points: 0,
+                historic: []
             },
             cartSelected: ''
         },
         methods: {
             changePlayer() {
                 this.playerActived = this.playerActived == 1 ? 2 : 1;
+
+                this.cartSelected = '';
             },
             selectCart() {
                 this.cartSelected = Math.floor((Math.random() * 13) +1 );
 
-                if (this.playerActived == 1)
+                if (this.playerActived == 1) {
                     this.playerOne.points += this.cartSelected;
 
-                if (this.playerActived == 2)
+                    this.playerOne.historic.push(this.cartSelected);
+                }
+
+                if (this.playerActived == 2) {
                     this.playerTwo.points += this.cartSelected;
+
+                    this.playerTwo.historic.push(this.cartSelected);
+                }
+
+                if (this.playerOne.points >= 21 || this.playerTwo.points >= 21)
+                    this.finishGame();
+            },
+            finishGame() {
+                if (this.playerOne.points <= 21 && this.playerOne.points > this.playerTwo.points)
+                    alert('Jogador 1 é o Vencedor');
+
+                else if (this.playerTwo.points <= 21 && this.playerTwo.points > this.playerOne.points)
+                    alert('Jogador 2 é o Vencedor');
+
+                else if (this.playerOne.points > 21)
+                    alert('Jogador 2 é o Vencedor');
+
+                else if (this.playerTwo.points > 21)
+                    alert('Jogador 1 é o Vencedor');
+
+                else
+                    alert('Empate!!!')
+
+                let vm = this
+                setTimeout( function () {
+                   vm.resetGame();
+                } ,3000);
+            },
+            resetGame() {
+                this.playerOne.points = 0;
+                this.playerOne.historic = '';
+                this.playerTwo.points = 0;
+                this.playerTwo.historic = '';
+                this.cartSelected = '';
+                this.playerActived = 1;
             }
-        }
+        },
     });
 </script>
 </body>
