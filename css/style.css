@@ -1,0 +1,11 @@
+* { margin: 0; padding: 0; }
+
+img { max-width: 100%; }
+
+.active{ background: yellow; }
+
+img.active{ background: yellow; }
+
+img.carts { max-width: 160px; }
+
+img.cart { max-width: 145px; }
